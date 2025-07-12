@@ -1,4 +1,5 @@
 import React from 'react';
+import { solve } from './Solver';
 
 export const generateNonogramClues = () => {
     const pixels = document.querySelectorAll('.pixel');
@@ -61,6 +62,13 @@ export const generateNonogramClues = () => {
     return { rows, columns };
 };
 
+export const tryToSolve = () => {
+    const { rows, columns } = generateNonogramClues();
+    const rowsAndCols = { rows, columns };
+
+    solve(rowsAndCols);
+}
+
 export const ClearButton = ({ setHistory, setRedoStack }) => {
     const clearCanvas = () => {
         const pixels = document.querySelectorAll('.pixel');
@@ -80,7 +88,7 @@ export const ClearButton = ({ setHistory, setRedoStack }) => {
 
 export const CheckButton = () => {
     return (
-        <button className="check-button">
+        <button onClick={tryToSolve} className="check-button">
             Solve Nonogram
         </button>
     );
