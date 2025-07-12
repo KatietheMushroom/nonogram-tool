@@ -13,8 +13,10 @@ function App() {
     // Add keyboard event listeners for undo and redo
     const handleKeyDown = (e) => {
         if (e.ctrlKey && e.key === 'z') {
+            e.preventDefault();
             undo(historyRef, setHistory, setRedoStack);
         } else if (e.ctrlKey && e.key === 'y') {
+            e.preventDefault();
             redo(redoStackRef, setRedoStack, setHistory);
         }
     };
@@ -32,9 +34,7 @@ function App() {
         <div className="App">
             <div className="card">
                 <h1>Nonogram Studio</h1>
-                <div className="content">
-                    <Canvas historyRef={historyRef} setHistory={setHistory} setRedoStack={setRedoStack} />
-                </div>
+                <Canvas historyRef={historyRef} setHistory={setHistory} setRedoStack={setRedoStack} />
                 <div className="bottom-toolbar">
                     <ClearButton setHistory={setHistory} setRedoStack={setRedoStack} />
                     <CheckButton/>
