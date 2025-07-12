@@ -1,8 +1,23 @@
+async function waitForClick(popup) {
+    return new Promise(resolve => {
+        popup.document.body.addEventListener('click', resolve, { once: true });
+    });
+}
+
+function mergeChangedSquares(arr1, arr2) {
+    const map = new Map();
+    // Add all from arr1
+    arr1.forEach(({ index, result }) => map.set(index, result));
+    // Add/overwrite from arr2
+    arr2.forEach(({ index, result }) => map.set(index, result));
+    // Convert back to array of objects
+    return Array.from(map.entries()).map(([index, result]) => ({ index: Number(index), result }));
+}
+
 function checkLine(line, clues) {
     // Returns an array with the indices of squares that were changed
     // and their new values as pairs of {index, result}
     const changedSquares = [];
-    console.log("Clues:", clues);
 
     // Just need to find one type of change
     if (!clues || clues.length === 0 || (clues.length === 1 && clues[0] === 0)) {
@@ -22,37 +37,134 @@ function checkLine(line, clues) {
         }
     } 
     else {
+        
+        // Current implementation results in duplicate results in changedSquares
+        // It shouldn't be a problem, but it can be optimized
+        // Wait but it's a map right. So there's no duplicates
+
+        // checkLine() might also need to be recursive lol?
+
+        // ----------------------------------------------------------------------
+        
         // Try superimposing 
+
         const lineLeft = Array(line.length).fill(0);
         const lineRight = Array(line.length).fill(0);
         let leftCount = 0;
         let rightCount = 0;
-        for (let i = 0; i < clues.length; i++) {
+        for (let i = 1; i <= clues.length; i++) {
             // Fill in one left clue
-            const clueLeft = clues[i];
+            const clueLeft = clues[i - 1];
             for (let j = 0; j < clueLeft; j++) {
-                lineLeft[i+leftCount] = 2;
+                // Use i to identify which group it is
+                lineLeft[leftCount] = i;
                 leftCount++;
             }
-            lineLeft[i+leftCount] = 1; 
             leftCount++;
             // Fill in one right clue
-            const clueRight = clues[clues.length - i - 1];
+            const clueRight = clues[clues.length - i];
             for (let j = 0; j < clueRight; j++) {
-                lineRight[line.length - 1 - i - rightCount] = 2;
+                // Use i to identify which group it is
+                lineRight[line.length - 1 - rightCount] = clues.length - i + 1;
                 rightCount++;
             }
-            lineRight[line.length - 1 - i - rightCount] = 1; 
             rightCount++;
         }
         // Now superimpose the two lines
         for (let i = 0; i < line.length; i++) {
-            if (lineLeft[i] === 2 && lineRight[i] === 2) {
+            if (lineLeft[i] === lineRight[i] && lineLeft[i] !== 0) {
                 // If both are filled, fill it
                 if (line[i] !== 2) {
                     changedSquares.push({ index: i, result: 2 });
                 }
             }
+        }
+
+        // Apply the changed squares to a copy of the line
+        if (changedSquares.length !== 0) {
+            let changedLine = [...line];
+            for (let i = 0; i < changedSquares.length; i++) {
+                const { index, result } = changedSquares[i];
+                if (changedLine[index] !== result) {
+                    changedLine[index] = result;
+                }
+            }
+
+            return mergeChangedSquares(
+                changedSquares,
+                checkLine(changedLine, clues)
+            );
+        }
+
+        // ----------------------------------------------------------------------
+
+        // Check for things that can be extended
+
+        let clueCounter = 0; // Keep track of which clue we're on
+        let clueProgress = 0; // Count how many squares we filled for the current clue
+        let clueOngoing = false;
+        for (let i = 0; i < line.length; i++) {
+            if (line[i] === 2) {
+                clueProgress++;
+                clueOngoing = true;
+            } else if (line[i] === 1) {
+                if (clueOngoing) {
+                    // If we were filling, that means we finished a clue!
+                    clueProgress = 0;
+                    clueCounter++;
+                    clueOngoing = false;
+                }
+            } else {
+                let finishingPos = i;
+                // If we reach an empty square, check if we can fill it
+                if (clueOngoing && clueCounter < clues.length) {
+                    // If the current clue is not finished, fill this square
+                    const remainingClue = i + clues[clueCounter] - clueProgress;
+                    console.log("Remaining clue length is", remainingClue);
+                    for (let j = i; j < remainingClue; j++) {
+                        console.log("Filling square at index", j, "for clue", clues[clueCounter]);
+                        changedSquares.push({ index: j, result: 2 });
+                        clueProgress++;
+                        finishingPos++;
+                    }
+                    // Finish off the clue with a cross if needed
+                    if (finishingPos < line.length && line[finishingPos] !== 1) {
+                        console.log("Finishing clue at index", finishingPos, "with a cross");
+                        console.log("Clue is", clues[clueCounter], "and progress is", clueProgress);
+                        changedSquares.push({ index: finishingPos, result: 1 });
+                        clueProgress = 0;
+                        clueCounter++;
+                        clueOngoing = false;
+                    }
+                }
+                if (clueOngoing && clueCounter === clues.length) {
+                    // If we finished all clues, we can fill all remaining squares
+                    for (let j = finishingPos; j < line.length; j++) {
+                        if (line[j] === 0) {
+                            changedSquares.push({ index: j, result: 1 });
+                        }
+                    }
+                }
+                if (!clueOngoing) {
+                    break;
+                }
+            }
+        }
+        
+        // Apply the changed squares to a copy of the line
+        if (changedSquares.length !== 0) {
+            let changedLine = [...line];
+            for (let i = 0; i < changedSquares.length; i++) {
+                const { index, result } = changedSquares[i];
+                if (changedLine[index] !== result) {
+                    changedLine[index] = result;
+                }
+            }
+
+            return mergeChangedSquares(
+                changedSquares,
+                checkLine(changedLine, clues)
+            );
         }
     }
 
@@ -118,7 +230,7 @@ function showResultsGrid(rowResults) {
     popup.document.close();
 }
 
-export const solve = ({rows, columns}) => {
+export const solve = async ({rows, columns}) => {
     let allLines = [];
 
     // First is designation, second is index
@@ -151,6 +263,9 @@ export const solve = ({rows, columns}) => {
     }
     // Transpose the results grid for columns
     const colResults = rowResults[0].map((_, colIndex) => rowResults.map(row => row[colIndex]));
+
+    // Open popup once and reuse it
+    const popup = window.open('', 'Nonogram Solution', 'width=600,height=600');
 
     while (toCheck.length > 0) {
         console.log("Lines to check:", toCheck.length);
@@ -186,9 +301,14 @@ export const solve = ({rows, columns}) => {
                     linesMap[`${line[0]}${index}`] = true;
                 }
             }
+            console.log("Updating row", line[1], "and column", index, "with result", result);
         }
         // Update linesMap to say this line is no longer in the queue
         linesMap[`${line[0]}${line[1]}`] = false;
+
+        // Show the current grid and wait for click to continue
+        showResultsGrid(rowResults, popup, line);
+        await waitForClick(popup);
     }
 
     showResultsGrid(rowResults);
