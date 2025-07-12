@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import './App.css'
 import Canvas from './components/Canvas';
 import { undo, redo } from './components/UndoRedoManager';
-import { ClearButton, CheckButton, ExportButton } from './components/Buttons';
+import { ClearButton, CheckButton, ExportButton, ExportPuzzleButton } from './components/Buttons';
 
 function App() {
     const [history, setHistory] = useState([]); // History stack for undo/redo
@@ -39,6 +39,7 @@ function App() {
                     <ClearButton setHistory={setHistory} setRedoStack={setRedoStack} />
                     <CheckButton/>
                     <ExportButton/>
+                    <ExportPuzzleButton/>
                 </div>
             </div>
         </div>

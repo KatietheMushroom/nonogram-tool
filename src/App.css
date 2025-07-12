@@ -54,12 +54,12 @@ h1 {
     grid-template-columns: repeat(var(--canvas-width), 1fr);
     grid-template-rows: repeat(var(--canvas-height), 1fr);
     gap: 0;
-    border: 2px solid #3c3131; /* Dark border to match buttons */
-    box-shadow: 5px 5px #3c3131; /* Subtle shadow for depth */
-    margin: 0px auto; /* Center the canvas with spacing */
-    max-width: 100%; /* Constrain width */
-    max-height: 100%; /* Constrain height */
-    background-color: #f8f8f8; /* Light background to match the card */
+    border: 2px solid #3c3131;
+    box-shadow: 5px 5px #3c3131; 
+    margin: 0px auto; 
+    max-width: 100%; 
+    max-height: 100%;
+    background-color: #f8f8f8; 
 }
 
 .pixel {
@@ -79,49 +79,54 @@ h1 {
 
 .pixel.filled:hover {
     background-color: #444;
-    /* Lighter shade for black pixels */
 }
 
 .clear-button,
 .check-button,
-.export-button {
-    font-family: "Dokdo", system-ui; /* Match font style */
-    font-size: 1.2rem; /* Match button font size */
-    color: white; /* White text */
-    border: none; /* Remove default border */
-    border-radius: 5px; /* Rounded corners */
-    padding: 10px 15px; /* Add padding inside the button */
-    cursor: pointer; /* Pointer cursor for buttons */
-    box-shadow: 3px 3px #3c3131; /* Subtle shadow for buttons */
-    transition: background-color 0.3s ease; /* Smooth hover transition */
-    margin: 10px; /* Space between buttons */
+.export-button,
+.export-puzzle-button {
+    font-family: "Dokdo", system-ui; 
+    font-size: 1.2rem;
+    color: white;
+    border: none; 
+    border-radius: 5px;
+    padding: 10px 15px; 
+    cursor: pointer; 
+    box-shadow: 3px 3px #3c3131;
+    transition: background-color 0.3s ease; 
+    margin: 10px; 
 }
 
-/* Clear Button */
 .clear-button {
-    background-color: #ff4d4d; /* Red background for clear button */
+    background-color: #fa5f5f;
 }
 
 .clear-button:hover {
-    background-color: #ff1a1a; /* Darker red on hover */
+    background-color: #ff1a1a;
 }
 
-/* Check Button */
 .check-button {
-    background-color: #4caf50; /* Green background for check button */
+    background-color: #53ca57;
 }
 
 .check-button:hover {
-    background-color: #45a049; /* Darker green on hover */
+    background-color: #45a049;
 }
 
-/* Export Button */
 .export-button {
-    background-color: #2196f3; /* Blue background for export button */
+    background-color: #39a2f7;
 }
 
 .export-button:hover {
-    background-color: #0b7dda; /* Darker blue on hover */
+    background-color: #0b7dda;
+}
+
+.export-puzzle-button {
+    background-color: #c66ee9;
+} 
+
+.export-puzzle-button:hover {
+    background-color: #a758dc;
 }
 
 .bottom-toolbar {
@@ -136,66 +141,65 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px; /* Space between controls */
-    margin-bottom: 20px; /* Space below controls */
-    padding: 10px 20px; /* Add padding around the controls */
-    background-color: #f8f8f8; /* Match the card background */
-    border: 2px solid #3c3131; /* Add a border to match other elements */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 5px 5px #3c3131; /* Subtle shadow for depth */
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 10px 20px; 
+    background-color: #f8f8f8; 
+    border: 2px solid #3c3131;
+    border-radius: 10px; 
+    box-shadow: 5px 5px #3c3131; 
 }
 
 .canvas-controls label {
-    font-family: "Dokdo", system-ui; /* Match font style */
-    font-size: 1.2rem; /* Slightly larger font size */
-    color: #3c3131; /* Match text color */
+    font-family: "Dokdo", system-ui; 
+    font-size: 1.2rem;
+    color: #3c3131;
 }
 
 .canvas-controls button {
-    font-family: "Dokdo", system-ui; /* Match font style */
-    font-size: 1.2rem; /* Match button font size */
-    color: black; /* White text */
-    background-color: #ffeb56; /* Match button background color */
-    border: none; /* Remove default border */
-    border-radius: 5px; /* Rounded corners */
-    padding: 10px 15px; /* Add padding inside the button */
-    cursor: pointer; /* Pointer cursor for buttons */
-    box-shadow: 3px 3px #3c3131; /* Subtle shadow for buttons */
-    transition: background-color 0.3s ease; /* Smooth hover transition */
-    margin-left: 10px; /* Space between label and button */
+    font-family: "Dokdo", system-ui;
+    font-size: 1.2rem;
+    color: 3c3131;
+    background-color: #ffeb56;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px; 
+    cursor: pointer; 
+    box-shadow: 3px 3px #3c3131;
+    transition: background-color 0.3s ease;
+    margin-left: 10px; 
 }
 
 .canvas-controls button:hover {
-    background-color: #f8d25d; /* Darker on hover */
+    background-color: #f8d25d;
 }
 
 .canvas-controls input[type="number"] {
-    margin-left: 8px; /* Space between label and input */
-    font-family: "Dokdo", system-ui; /* Match font style */
-    font-size: 1.2rem; /* Match button font size */
-    -moz-appearance: textfield !important; /* Remove arrows in Firefox */
-    -webkit-appearance: none !important; /* Remove arrows in Chrome, Safari, Edge */
-    appearance: none !important; /* Standard property for modern browsers */
-    border: none; /* Remove the box border */
-    border-bottom: 2px solid #3c3131; /* Add underline */
-    background: none; /* Remove background color */
-    font-size: 1rem; /* Match input font size */
-    text-align: center; /* Center text */
-    width: 60px; /* Fixed width */
-    outline: none; /* Remove focus outline */
-    transition: border-color 0.3s ease; /* Smooth transition for focus */
+    margin-left: 8px; 
+    font-family: "Dokdo", system-ui;
+    font-size: 1.2rem; 
+    -moz-appearance: textfield !important;
+    -webkit-appearance: none !important; 
+    appearance: none !important; 
+    border: none;
+    border-bottom: 2px solid #3c3131;
+    background: none; 
+    font-size: 1rem;
+    text-align: center;
+    width: 60px; 
+    outline: none; 
+    transition: border-color 0.3s ease; 
     border-radius: 0;
     border-bottom-style: dashed;
     padding: 0;
 }
 
 .canvas-controls input[type="number"]:focus {
-    border-bottom: 2px dashed #BDE9E0; /* Change underline color on focus */
+    border-bottom: 2px dashed #BDE9E0;
 }
 
-/* Explicitly target spin buttons in WebKit browsers */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none; /* Remove spin buttons */
-    margin: 0; /* Remove any margin */
+    -webkit-appearance: none; 
+    margin: 0;
 }
